@@ -5,19 +5,52 @@
 """
 
 
-def get_data(num_files, *filenames, base_path="/portland_crime/data_sets/"):
+from collections import namedtuple
+from csv import reader
+
+
+def build_dataset(*filenames, base_path="/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/"):
     """
     Imports and formats data for calculations from any number of files.
     """
 
+    crime_data = dict()
 
-    data = list()
 
-    for _ in range(num_files):
-        with open(base_path+filenames[_], 'r') as csvreader:
-            reader = csv.D
+    for name in filenames:
+        crimes = list()
+        with open(base_path + name, 'r') as csvreader:
+            reader = csv.reader(csvreader)
+            headings = ', '.join(next(reader)).replace(' ', )
+            Data = namedtuple('Data', headings)
 
-    return data
+            for incident in reader:
+                crime = Data(*incident)
+                crimes.append(crime)
+
+            crime_data.update({name[20:24]: crimes})
+
+    return crime_data
+
+
+def sort_by_crime_helper(incident):
+    """
+    Helper function for sorted() and groupby() to sort by MajorOffenseType, index=3
+    """
+
+
+    offense = incident[3]
+    return offense
+
+
+def sort_by_crime_helper(incident):
+    """
+    Helper function for sorted() and groupby() to sort by MajorOffenseType, index=3
+    """
+
+
+    offense = incident[3]
+    return offense
 
 
 def data_max():
