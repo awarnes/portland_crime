@@ -1,12 +1,21 @@
 """
 This is the interface for the Portland, Oregon Crime Analyzer (POCA).
+
+Questions:
+    -Would it be better/possible to make one 'help' function and change the message?
+    -Would it be better/possible to make one 'menu' function and change the options?
 """
 
 
-import os
+#  General system imports
+import os,
+
+#  Specific calc module imports
+from calc import (calc_by_date, calc_by_time, calc_by_offense,
+                 calc_by_address, calc_by_neighborhood, calc_by_precinct)
 
 
-def calc_menu_help():
+def calc_general_menu_help():
     """
     Displays the help file for the calc_menu.
     """
@@ -15,10 +24,10 @@ def calc_menu_help():
     print("CALC MENU HELP!!!!!")
     input("...") #  Wait for any user input
     os.system("clear")
-    calc_menu() #  This help pane is only callable from the calc_menu
+    calc_overview_menu() #  This help pane is only callable from the calc_menu
 
 
-def calc_menu():
+def calc_overview_menu():
     """
     A menu for all the calculation methods of the calc module.
     Wants:
@@ -30,8 +39,14 @@ def calc_menu():
     """
 
 
-    calc_menu_options = {1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: 'Load a prior session.', 9: 'Help', 10: 'Back'}
-    calc_menu_functions = {1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: calc_menu_help, 10: main_menu}
+    calc_menu_options = {1: 'Calculate by Report Date', 2: 'Calculate by Report Time', 3: 'Calculate by Major Offense Type',
+                         4: 'Calculate by Address', 5: 'Calculate by Neighborhood',
+                         6: 'Calculate by Police Precinct and District', 7: 'Load a prior session.',
+                         8: 'Help', 9: 'Back'}
+
+    calc_menu_functions = {1: calc_by_date, 2: calc_by_time, 3: calc_by_offense,
+                           4: calc_by_address, 5: calc_by_neighborhood, 6: calc_by_precinct,
+                           7: None, 8: calc_menu_help, 9: main_menu}
 
     for cmenu_key, cmenu_value in calc_menu_options.items():
         print("{}: {}.".format(cmenu_key, cmenu_value))
@@ -42,6 +57,7 @@ def calc_menu():
         calc_menu_functions[calc_menu_choice]()
     except (KeyError, ValueError):
         print("Invalid choice. Please enter the number of the option you want.")
+        calc_overview_menu()
 
 
 def leave():
