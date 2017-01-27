@@ -8,7 +8,7 @@ Questions:
 
 
 #  General system imports
-import os,
+import os
 
 #  Specific calc module imports
 from calc import (calc_by_date, calc_by_time, calc_by_offense,
@@ -46,7 +46,7 @@ def calc_overview_menu():
 
     calc_menu_functions = {1: calc_by_date, 2: calc_by_time, 3: calc_by_offense,
                            4: calc_by_address, 5: calc_by_neighborhood, 6: calc_by_precinct,
-                           7: None, 8: calc_menu_help, 9: main_menu}
+                           7: None, 8: calc_general_menu_help, 9: main_menu}
 
     for cmenu_key, cmenu_value in calc_menu_options.items():
         print("{}: {}.".format(cmenu_key, cmenu_value))
@@ -103,8 +103,8 @@ def main_menu():
     main_menu_options = {1: 'Calculations!', 2: 'Update your Database!',
                          3: 'General Help', 4: 'Credits', 5: 'Quit'}
 
-    main_menu_functions = {1: calc_menu, 2: update_menu,
-                         3: main_help_message, 4: credits, 5: leave}
+    main_menu_functions = {1: calc_overview_menu, 2: '',  #update_menu
+                         3: main_help_message, 4: '', 5: leave}  #credits
 
     for mmenu_key, mmenu_value in main_menu_options.items():
         print("{}: {}.".format(mmenu_key, mmenu_value))

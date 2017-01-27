@@ -4,14 +4,17 @@
     These will be imported to main.py in order to provide feedback to the user.
 """
 
-
-from collections import namedtuple
+import os
+from collections import (namedtuple, Counter, defaultdict)
 from csv import reader
 
 
-def build_dataset(*filenames, base_path="/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/"):
+
+
+
+def build_dataset(filenames, base_path="/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/"):
     """
-    Imports and formats data for calculations from any number of files.
+    Imports and formats data for calculations from any number of given files if they are in the correct location.
     """
 
     crime_data = dict()
@@ -20,11 +23,11 @@ def build_dataset(*filenames, base_path="/Users/alexanderwarnes/Documents/abw_co
     for name in filenames:
         crimes = list()
         with open(base_path + name, 'r') as csvreader:
-            reader = csv.reader(csvreader)
-            headings = ', '.join(next(reader)).replace(' ', )
+            read_data = reader(csvreader)
+            headings = ', '.join(next(read_data)).replace(' ', '')
             Data = namedtuple('Data', headings)
 
-            for incident in reader:
+            for incident in read_data:
                 crime = Data(*incident)
                 crimes.append(crime)
 
@@ -33,43 +36,129 @@ def build_dataset(*filenames, base_path="/Users/alexanderwarnes/Documents/abw_co
     return crime_data
 
 
-def sort_by_crime_helper(incident):
+def choose_datasets(base_path="/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/"):
+    """
+    Presents a menu option system for available datasets and returns a list of strings of them.
+    """
+
+    datasets_chosen = list()
+
+    if os.getcwd() != "/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/":
+        os.chdir("/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/")
+
+    print()
+    print("Do you need to change the base filepath for your .csv files?")
+    filepath_yn = input("Y/N: ")
+
+
+    if 'y' in filepath_yn:
+        print("Where are your .csv data sets stored? (Please enter full filepath)")
+        base_path = input(">>> ")
+
+    dataset_options = {index+1: filename for index, filename in enumerate(os.listdir()) if filename[-4:] == '.csv'}
+
+    print("Which files do you want to use?")
+
+    for datafile_key, datafile_value in sorted(dataset_options.items()):
+        print("{}: {}".format(datafile_key, datafile_value))
+    print()
+    print('Please enter the numbers associated with each file you want to use separated by a space')
+    file_choices = input(">>> ").split()
+
+    for choice in file_choices:
+        datasets_chosen.append(dataset_options[int(choice)])
+
+    return datasets_chosen
+
+
+def sort_by_offense_helper(incident):
     """
     Helper function for sorted() and groupby() to sort by MajorOffenseType, index=3
     """
 
 
-    offense = incident[3]
+    offense = incident.MajorOffenseType
     return offense
 
 
-def sort_by_crime_helper(incident):
+def sort_by_date_helper(incident):
     """
-    Helper function for sorted() and groupby() to sort by MajorOffenseType, index=3
+    Helper function for sorted() and groupby() to sort by ReportDate, index=1
     """
 
 
-    offense = incident[3]
-    return offense
+    date = incident.ReportDate
+    return date
 
 
-def data_max():
+def sort_by_time_helper(incident):
+    """
+    Helper function for sorted() and groupby() to sort by ReportTime, index=2
+    """
+
+
+    time = incident.ReportTime
+    return time
+
+
+def sort_by_neighborhood_helper(incident):
+    """
+    Helper function for sorted() and groupby() to sort by Neighborhood, index=5
+    """
+
+
+    neighborhood = incident.Neighborhood
+    return neighborhood
+
+
+def data_max(data, check_type):
     """
     Returns the max() of the search terms.
     """
 
 
-    pass
+    offense_dict = defaultdict(list)
+
+    for eachkey in data:
+        for incident in data[eachkey]:
+            offense_dict[eachkey].append(getattr(incident, check_type))
+
+        c = Counter(offense_dict[eachkey])
+        print("The most common {} in {} was {} with {} incidents.".format(check_type, eachkey, c.most_common()[0][0], c.most_common()[0][1]))
+
+    input("...")
+    os.system("clear")
 
 
-def data_min():
+def data_min(data, check_type):
+    """
+    Returns the max() of the search terms.
+    """
+
+    # return_dict = {'ReportDate': calc_by_date, 'ReportTime': calc_by_time, 'MajorOffenseType': calc_by_offense, 'Address': calc_by_address, 'Neighborhood': calc_by_neighborhood} # Make something to return to the previous menu when done with data based off of check_type
+
+    offense_dict = defaultdict(list)
+
+    for eachkey in data:
+        for incident in data[eachkey]:
+            offense_dict[eachkey].append(getattr(incident, check_type))
+
+        c = Counter(offense_dict[eachkey])
+        print("The least common {} in {} was {} with {} incidents.".format(check_type, eachkey, c.most_common()[-1][0], c.most_common()[-1][1]))
+
+    input("...")
+    os.system("clear")
+
+
+def data_average():
     """
     Returns the max() of the search terms.
     """
 
 
-    pass
-
+    print("WORK IN PROGRESS!!!")
+    input("...")
+    os.system("clear")
 
 def calc_by_date():
     """
@@ -77,7 +166,17 @@ def calc_by_date():
     """
 
 
-    pass
+    dataset_names = choose_datasets()
+    data = build_dataset(dataset_names)
+
+    # for dataset_key in data.keys():
+    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](data, 'ReportDate')
 
 
 def calc_by_time():
@@ -86,7 +185,44 @@ def calc_by_time():
     """
 
 
-    pass
+    dataset_names = choose_datasets()
+    data = build_dataset(dataset_names)
+
+    # for dataset_key in data.keys():
+    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](data, 'ReportTime')
+
+
+def calc_options_menu():
+    """
+    Prints a menu for a variety of calculation options and returns the choice of the option.
+    """
+
+
+    calc_options = {1: 'Min', 2: 'Max', 3: 'Average'}
+    print()
+    for copt_key, copt_value in calc_options.items():
+        print("{}: {}".format(copt_key, copt_value))
+
+    print("Which one do you want?")
+    try:
+        copt_choice = int(input(">>> "))
+        if copt_choice in calc_options.keys():
+            return copt_choice
+        else:
+            print("Invalid choice. Please enter the number next to the selection you want.")
+            calc_options_menu()
+            return int(copt_choice)
+    except ValueError:
+        print("Invalid choice. Please enter the number next to the selection you want.")
+        calc_options_menu()
+    finally:
+        return int(copt_choice)
 
 
 def calc_by_offense():
@@ -95,7 +231,18 @@ def calc_by_offense():
     """
 
 
-    pass
+    dataset_names = choose_datasets()
+    data = build_dataset(dataset_names)
+
+    # for dataset_key in data.keys():
+    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](data, 'MajorOffenseType')
+
 
 
 def calc_by_address():
@@ -104,7 +251,17 @@ def calc_by_address():
     """
 
 
-    pass
+    dataset_names = choose_datasets()
+    data = build_dataset(dataset_names)
+
+    # for dataset_key in data.keys():
+    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](data, 'Address')
 
 
 def calc_by_neighborhood():
@@ -113,7 +270,17 @@ def calc_by_neighborhood():
     """
 
 
-    pass
+    dataset_names = choose_datasets()
+    data = build_dataset(dataset_names)
+
+    # for dataset_key in data.keys():
+    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](data, 'Neighborhood')
 
 
 def calc_by_precinct():
