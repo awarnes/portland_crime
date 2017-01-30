@@ -8,61 +8,10 @@ Questions:
 
 
 #  General system imports
-from os import (system, getcwd, listdir, chdir)
-from csv import reader
-from collections import namedtuple
+from os import (system, getcwd, chdir)
 
 #  Specific POCA module imports
-from calculations import (calc_by_date, calc_by_time, calc_by_offense,
-                          calc_by_address, calc_by_neighborhood, calc_by_precinct)
-from control_flow import (pause_clear, leave, credits, main_menu_help, calc_menu_help)
-
-
-def build_dataset(filenames):
-    """
-    Imports and formats data for calculations from any number of given files if they are in the correct location.
-    """
-
-    crime_data = dict()
-
-
-    for name in filenames:
-        crimes = list()
-        with open(getcwd() + '/' + name, 'r') as csvreader:
-            read_data = reader(csvreader)
-            headings = ', '.join(next(read_data)).replace(' ', '')
-            Data = namedtuple('Data', headings)
-
-            for incident in read_data:
-                crime = Data(*incident)
-                crimes.append(crime)
-
-            crime_data.update({name[20:24]: crimes})
-
-    return crime_data
-
-
-def choose_datasets():
-    """
-    Presents a menu option system for available datasets and returns a list of strings of them.
-    """
-
-    datasets_chosen = list()
-
-    dataset_options = {index+1: filename for index, filename in enumerate(listdir()) if filename[-4:] == '.csv'}
-
-    print("Which files do you want to use?")
-
-    for datafile_key, datafile_value in sorted(dataset_options.items()):
-        print("{}: {}".format(datafile_key, datafile_value))
-    print()
-    print('Please enter the numbers associated with each file you want to use separated by a space')
-    file_choices = input(">>> ").split()
-
-    for choice in file_choices:
-        datasets_chosen.append(dataset_options[int(choice)])
-
-    return datasets_chosen
+import calc, control_flow, config
 
 
 def calc_overview_menu():
@@ -81,16 +30,16 @@ def calc_overview_menu():
                          6: 'Calculate by Police Precinct and District', 7: 'Load a prior session.',
                          8: 'Help', 9: 'Back'}
 
-    calc_menu_functions = {1: calc_by_date, 2: calc_by_time, 3: calc_by_offense,
-                           4: calc_by_address, 5: calc_by_neighborhood, 6: calc_by_precinct,
-                           7: None, 8: calc_menu_help, 9: main_menu}
+    calc_menu_functions = {1: calc.by_date, 2: calc.by_time, 3: calc.by_offense,
+                           4: calc.by_address, 5: calc.by_neighborhood, 6: calc.by_precinct,
+                           7: None, 8: control_flow.calc_menu_help, 9: main_menu}
 
     for cmenu_key, cmenu_value in calc_menu_options.items():
         print("{}: {}.".format(cmenu_key, cmenu_value))
 
     try:
         calc_menu_choice = int(input("Which one do you want? "))
-        os.system('clear')
+        system('clear')
         calc_menu_functions[calc_menu_choice]()
     except (KeyError, ValueError):
         print("Invalid choice. Please enter the number of the option you want.")
@@ -103,22 +52,22 @@ def main_menu():
     Displays the main menu of the program for user interaction.
     """
 
-    main_menu_options = {1: 'Calculations.', 2: 'Update your Database!',
+    main_menu_options = {1: 'Perform calculations.', 2: 'Open data sets.',
                          3: 'Help', 4: 'Credits', 5: 'Quit'}
 
-    main_menu_functions = {1: calc_overview_menu, 2: '',
-                         3: main_menu_help, 4: credits, 5: leave}
+    main_menu_functions = {1: calc_overview_menu, 2: config.open_dataset,
+                           3: control_flow.main_menu_help, 4: control_flow.credits, 5: control_flow.leave}
 
     for mmenu_key, mmenu_value in main_menu_options.items():
         print("{}: {}".format(mmenu_key, mmenu_value))
 
     try:
         main_menu_choice = int(input("Which one do you want?" ))
-        os.system('clear')
+        system('clear')
         main_menu_functions[main_menu_choice]()
     except (ValueError, KeyError):
         print("Invalid choice. Please enter the number of the option you want.")
-        pause_clear()
+        control_flow.pause_clear()
         main_menu()
 
 
@@ -140,6 +89,6 @@ if __name__ == '__main__':
 
     system('clear')
     print("Welcome to the Portland, Oregon Crime Analyzer (POCA)")
-    pause_clear()
+    control_flow.pause_clear()
 
-    main_menu_help()
+    control_flow.main_menu_help()

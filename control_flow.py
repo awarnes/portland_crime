@@ -4,7 +4,7 @@ Helper functions for the POCA
 
 
 from os import system
-
+import main
 
 def pause_clear():
     """
@@ -32,7 +32,7 @@ def leave():
 
     elif 'n' in leave_yn.lower():
         pause_clear()
-        main_menu()
+        main.main_menu()
 
     else:
         print("I'm not sure what you mean!")
@@ -61,10 +61,10 @@ def calc_menu_help():
     Displays the help file for the calc_menu.
     """
 
-    os.system("clear")
+    system("clear")
     print("CALC MENU HELP!!!!!")
     pause_clear()
-    calc_overview_menu() #  This help pane is only callable from the calc_menu
+    main.calc_overview_menu() #  This help pane is only callable from the calc_menu
 
 
 def main_menu_help():
@@ -75,4 +75,6 @@ def main_menu_help():
 
     print("MAIN MENU HELP MESSAGE!")
     pause_clear()
-    main_menu() #  This help function is only callable from the main menu.
+    main.main_menu() #  This help function is only callable from the main menu.
+
+

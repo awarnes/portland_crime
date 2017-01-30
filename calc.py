@@ -5,6 +5,7 @@
 """
 
 from control_flow import pause_clear
+import config
 from collections import (Counter, defaultdict)
 
 
@@ -44,7 +45,7 @@ def data_min(data, check_type):
     pause_clear()
 
 
-def data_average():
+def data_average(data, check_type):
     """
     Returns the max() of the search terms.
     """
@@ -54,34 +55,23 @@ def data_average():
     pause_clear()
 
 
-def calc_by_date():
+def by_date():
     """
     Menu to calculate certain information oriented by date.
     """
 
-
-    dataset_names = choose_datasets()
-    data = build_dataset(dataset_names)
-
-    # for dataset_key in data.keys():
-    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
-
     calc_functions = {1: data_min, 2: data_max, 3: data_average}
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](data, 'ReportDate')
+    calc_functions[calc_choice](config.DATA, 'ReportDate')
 
 
-def calc_by_time():
+def by_time():
     """
     Menu to calculate certain information oriented by time of day.
     """
 
-
-    dataset_names = choose_datasets()
-    data = build_dataset(dataset_names)
-
     # for dataset_key in data.keys():
     #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
 
@@ -89,7 +79,51 @@ def calc_by_time():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](data, 'ReportTime')
+    calc_functions[calc_choice](config.DATA, 'ReportTime')
+
+
+def by_offense():
+    """
+    Menu to calculate certain information oriented by offense type.
+    """
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](config.DATA, 'MajorOffenseType')
+
+
+def by_address():
+    """
+    Menu to calculate certain information oriented by address.
+    """
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](config.DATA, 'Address')
+
+
+def by_neighborhood():
+    """
+    Menu to calculate certain information oriented by neighborhood.
+    """
+
+    calc_functions = {1: data_min, 2: data_max, 3: data_average}
+
+    calc_choice = calc_options_menu()
+
+    calc_functions[calc_choice](config.DATA, 'Neighborhood')
+
+
+def by_precinct():
+    """
+    Menu to calculate certain information oriented by police precinct and district.
+    """
+
+    pass
 
 
 def calc_options_menu():
@@ -117,73 +151,6 @@ def calc_options_menu():
         calc_options_menu()
     finally:
         return int(copt_choice)
-
-
-def calc_by_offense():
-    """
-    Menu to calculate certain information oriented by offense type.
-    """
-
-
-    dataset_names = choose_datasets()
-    data = build_dataset(dataset_names)
-
-    # for dataset_key in data.keys():
-    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
-
-    calc_functions = {1: data_min, 2: data_max, 3: data_average}
-
-    calc_choice = calc_options_menu()
-
-    calc_functions[calc_choice](data, 'MajorOffenseType')
-
-
-
-def calc_by_address():
-    """
-    Menu to calculate certain information oriented by address.
-    """
-
-
-    dataset_names = choose_datasets()
-    data = build_dataset(dataset_names)
-
-    # for dataset_key in data.keys():
-    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
-
-    calc_functions = {1: data_min, 2: data_max, 3: data_average}
-
-    calc_choice = calc_options_menu()
-
-    calc_functions[calc_choice](data, 'Address')
-
-
-def calc_by_neighborhood():
-    """
-    Menu to calculate certain information oriented by neighborhood.
-    """
-
-
-    dataset_names = choose_datasets()
-    data = build_dataset(dataset_names)
-
-    # for dataset_key in data.keys():
-    #     data = sorted(data[dataset_key], key=sort_by_offense_helper)
-
-    calc_functions = {1: data_min, 2: data_max, 3: data_average}
-
-    calc_choice = calc_options_menu()
-
-    calc_functions[calc_choice](data, 'Neighborhood')
-
-
-def calc_by_precinct():
-    """
-    Menu to calculate certain information oriented by police precinct and district.
-    """
-
-    pass
-
 
 
 # TODO: Make functions to perform calculations on data.
