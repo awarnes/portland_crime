@@ -25,13 +25,13 @@ def data_max(data, check_type):
 
     pause_clear()
 
+    return_dict[check_type]()
+
 
 def data_min(data, check_type):
     """
     Returns the max() of the search terms.
     """
-
-    # return_dict = {'ReportDate': calc_by_date, 'ReportTime': calc_by_time, 'MajorOffenseType': calc_by_offense, 'Address': calc_by_address, 'Neighborhood': calc_by_neighborhood} # Make something to return to the previous menu when done with data based off of check_type
 
     offense_dict = defaultdict(list)
 
@@ -44,12 +44,13 @@ def data_min(data, check_type):
 
     pause_clear()
 
+    return_dict[check_type]()
+
 
 def data_average(data, check_type):
     """
     Returns the max() of the search terms.
     """
-
 
     print("WORK IN PROGRESS!!!")
     pause_clear()
@@ -152,5 +153,8 @@ def calc_options_menu():
     finally:
         return int(copt_choice)
 
+
+return_dict = {'ReportDate': by_date, 'ReportTime': by_time, 'MajorOffenseType': by_offense,
+               'Address': by_address, 'Neighborhood': by_neighborhood}
 
 # TODO: Make functions to perform calculations on data.

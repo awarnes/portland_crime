@@ -63,4 +63,15 @@ def open_dataset():
     dataset_names = choose_datasets()
     DATA = build_dataset(dataset_names)
 
+
+def open_new_dataset():
+    """
+    Opens data into the global scope DATA variable.
+    :return:
+    """
+    global DATA
+
+    dataset_names = choose_datasets()
+    DATA = build_dataset(dataset_names)
+
     main.main_menu()

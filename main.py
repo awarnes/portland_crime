@@ -11,7 +11,9 @@ Questions:
 from os import (system, getcwd, chdir)
 
 #  Specific POCA module imports
-import calc, control_flow, config
+import calc
+import control_flow
+import config
 
 
 def calc_overview_menu():
@@ -43,7 +45,7 @@ def calc_overview_menu():
         calc_menu_functions[calc_menu_choice]()
     except (KeyError, ValueError):
         print("Invalid choice. Please enter the number of the option you want.")
-        pause_clear()
+        control_flow.pause_clear()
         calc_overview_menu()
 
 
@@ -52,10 +54,10 @@ def main_menu():
     Displays the main menu of the program for user interaction.
     """
 
-    main_menu_options = {1: 'Perform calculations.', 2: 'Open data sets.',
+    main_menu_options = {1: 'Perform calculations.', 2: 'Open new data sets.',
                          3: 'Help', 4: 'Credits', 5: 'Quit'}
 
-    main_menu_functions = {1: calc_overview_menu, 2: config.open_dataset,
+    main_menu_functions = {1: calc_overview_menu, 2: config.open_new_dataset,
                            3: control_flow.main_menu_help, 4: control_flow.credits, 5: control_flow.leave}
 
     for mmenu_key, mmenu_value in main_menu_options.items():
@@ -77,15 +79,18 @@ if __name__ == '__main__':
     basepath = '/Users/alexanderwarnes/Documents/abw_codes/Git/projects/portland_crime/data_sets/'
 
     system('clear')
-    print("Do you need to change the base filepath for your .csv files?")
+    print("Do you need to change the base file path for your .csv files?")
     filepath_yn = input("Y/N: ")
+    print(type(filepath_yn))
 
     if 'y' in filepath_yn.lower():
-        print('Please enter the absolute filepath to your data directory.')
+        print('Please enter the absolute file path to your data directory.')
         basepath = input('>>> ')
 
     if getcwd() != basepath:
         chdir(basepath)
+
+    config.open_dataset()
 
     system('clear')
     print("Welcome to the Portland, Oregon Crime Analyzer (POCA)")
