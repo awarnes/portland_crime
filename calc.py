@@ -6,21 +6,22 @@
 
 from control_flow import pause_clear
 import config
+import main
 from collections import (Counter, defaultdict)
 
 
 def data_max(data, check_type):
     """
-    Returns the max() of the search terms.
+    Returns the max() of the search terms for each year of selected data.
     """
 
-    offense_dict = defaultdict(list)
+    data_dict = defaultdict(list)
 
     for eachkey in data:
         for incident in data[eachkey]:
-            offense_dict[eachkey].append(getattr(incident, check_type))
+            data_dict[eachkey].append(getattr(incident, check_type))
 
-        c = Counter(offense_dict[eachkey])
+        c = Counter(data_dict[eachkey])
         print("The most common {} in {} was {} with {} incidents.".format(check_type, eachkey, c.most_common()[0][0], c.most_common()[0][1]))
 
     pause_clear()
@@ -30,16 +31,16 @@ def data_max(data, check_type):
 
 def data_min(data, check_type):
     """
-    Returns the max() of the search terms.
+    Returns the max() of the search terms for each year of selected data.
     """
 
-    offense_dict = defaultdict(list)
+    data_dict = defaultdict(list)
 
     for eachkey in data:
         for incident in data[eachkey]:
-            offense_dict[eachkey].append(getattr(incident, check_type))
+            data_dict[eachkey].append(getattr(incident, check_type))
 
-        c = Counter(offense_dict[eachkey])
+        c = Counter(data_dict[eachkey])
         print("The least common {} in {} was {} with {} incidents.".format(check_type, eachkey, c.most_common()[-1][0], c.most_common()[-1][1]))
 
     pause_clear()
@@ -49,11 +50,22 @@ def data_min(data, check_type):
 
 def data_average(data, check_type):
     """
-    Returns the max() of the search terms.
+    Returns the average of data for the selected check_type over the selected data years.
     """
 
-    print("WORK IN PROGRESS!!!")
+    data_dict = defaultdict(list)
+
+    for eachkey in data:
+        for incident in data[eachkey]:
+            data_dict[eachkey].append(getattr(incident, check_type))
+
+        c = Counter(data_dict[eachkey])
+        print("The  common {} in {} was {} with {} incidents.".format(check_type, eachkey, c.most_common()[-1][0],
+                                                                           c.most_common()[-1][1]))
+    #   The average number of (larceny) incidents across the year(s) (2000, 2001, 2002) was (1200).
     pause_clear()
+
+    return_dict[check_type]()
 
 
 def by_date():
@@ -65,7 +77,10 @@ def by_date():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](config.DATA, 'ReportDate')
+    if calc_choice == 4:
+        main.main_menu()
+    else:
+        calc_functions[calc_choice](config.DATA, 'ReportDate')
 
 
 def by_time():
@@ -80,7 +95,10 @@ def by_time():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](config.DATA, 'ReportTime')
+    if calc_choice == 4:
+        main.main_menu()
+    else:
+        calc_functions[calc_choice](config.DATA, 'ReportTime')
 
 
 def by_offense():
@@ -92,7 +110,10 @@ def by_offense():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](config.DATA, 'MajorOffenseType')
+    if calc_choice == 4:
+        main.main_menu()
+    else:
+        calc_functions[calc_choice](config.DATA, 'MajorOffenseType')
 
 
 def by_address():
@@ -104,7 +125,10 @@ def by_address():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](config.DATA, 'Address')
+    if calc_choice == 4:
+        main.main_menu()
+    else:
+        calc_functions[calc_choice](config.DATA, 'Address')
 
 
 def by_neighborhood():
@@ -116,7 +140,10 @@ def by_neighborhood():
 
     calc_choice = calc_options_menu()
 
-    calc_functions[calc_choice](config.DATA, 'Neighborhood')
+    if calc_choice == 4:
+        main.main_menu()
+    else:
+        calc_functions[calc_choice](config.DATA, 'Neighborhood')
 
 
 def by_precinct():
@@ -133,7 +160,7 @@ def calc_options_menu():
     """
 
 
-    calc_options = {1: 'Min', 2: 'Max', 3: 'Average'}
+    calc_options = {1: 'Min', 2: 'Max', 3: 'Average', 4: 'Back'}
     print()
     for copt_key, copt_value in calc_options.items():
         print("{}: {}".format(copt_key, copt_value))

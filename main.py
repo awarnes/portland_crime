@@ -81,7 +81,6 @@ if __name__ == '__main__':
     system('clear')
     print("Do you need to change the base file path for your .csv files?")
     filepath_yn = input("Y/N: ")
-    print(type(filepath_yn))
 
     if 'y' in filepath_yn.lower():
         print('Please enter the absolute file path to your data directory.')
@@ -94,6 +93,5 @@ if __name__ == '__main__':
 
     system('clear')
     print("Welcome to the Portland, Oregon Crime Analyzer (POCA)")
-    control_flow.pause_clear()
 
     control_flow.main_menu_help()
